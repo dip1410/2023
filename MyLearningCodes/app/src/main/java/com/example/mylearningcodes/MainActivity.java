@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.mylearningcodes.network.model.Request;
+import com.example.mylearningcodes.network.model.ResponseUser;
 import com.example.mylearningcodes.network.model.UserPost;
+import com.example.mylearningcodes.network.services.RetrofitInstance;
 import com.example.mylearningcodes.network.services.UserPostAPI;
 
 import java.util.List;
@@ -15,8 +18,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,12 +35,7 @@ public class MainActivity extends AppCompatActivity {
         btnGETById = findViewById(R.id.buttonGETById);
 
         // Retrofit instance
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        userpostsApi = retrofit.create(UserPostAPI.class);
+        userpostsApi = RetrofitInstance.getService().create(UserPostAPI.class);
 
         btnGET.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mytextview.setText("");
-                getPostsById();
+                getPostMethodCall();
             }
         });
     }
@@ -88,31 +84,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
 }//post
-    private void getPostsById() {
 
-        Call<List<UserPost>> call = userpostsApi.getPostsById(4);
-        call.enqueue(new Callback<List<UserPost>>() {
+    private void getPostMethodCall() {
+
+        Request request=new Request();
+        request.setName("TestUser");
+        request.setJob("Test");
+
+        Call<ResponseUser> call = userpostsApi.getPostResponse(request);
+        call.enqueue(new Callback<ResponseUser>() {
             @Override
-            public void onResponse(Call<List<UserPost>> call, Response<List<UserPost>> response) {
-                if (!response.isSuccessful()) {
-                    mytextview.setText("Code: " + response.code());
-                    return;
-                }
-                List<UserPost> posts = response.body();
+            public void onResponse(Call<ResponseUser> call, Response<ResponseUser> response) {
 
-                for (UserPost post : posts) {
-                    String content = "";
-                    content += "ID: " + post.getId() + "\n";
-                    content += "User ID: " + post.getId() + "\n";
-                    content += "Title: " + post.getTitle() + "\n";
-                    content += "Text: " + post.getText() + "\n\n";
+                // server will return new field id only
+                String content = "";
+                content += "Body : " + response.body().getName() + "\n";
+                content += "Title: " + response.body().getJob() + "\n";
+                content += "ID FROM SERVER ( Changes On Every Call ): " + response.body().getId() + "\n";
 
-                    mytextview.append(content);
-                }
+                mytextview.append(content);
+
             }
 
             @Override
-            public void onFailure(Call<List<UserPost>> call, Throwable t) {
+            public void onFailure(Call<ResponseUser> call, Throwable t) {
 
             }
         });
