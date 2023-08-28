@@ -16,7 +16,7 @@
         android:textColor="@color/white"
         android:padding="20dp"
         android:gravity="center"
-        android:visibility="gone"
+        android:visibility="visible"
         android:text="Retrofit Basic GET method call" />
 
     <Button
@@ -28,6 +28,7 @@
         android:textColor="@color/white"
         android:padding="20dp"
         android:gravity="center"
+        android:visibility="gone"
         android:text="Retrofit Basic Post method call" />
     <ScrollView
         android:layout_marginTop="10dp"

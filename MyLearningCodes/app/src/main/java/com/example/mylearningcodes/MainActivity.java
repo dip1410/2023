@@ -7,17 +7,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.mylearningcodes.di.DaggerApiComponent;
 import com.example.mylearningcodes.network.model.Request;
 import com.example.mylearningcodes.network.model.ResponseUser;
 import com.example.mylearningcodes.network.model.UserPost;
-import com.example.mylearningcodes.network.services.RetrofitInstance;
 import com.example.mylearningcodes.network.services.UserPostAPI;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,17 +28,22 @@ public class MainActivity extends AppCompatActivity {
     private Button btnGET, btnGETById;
     private UserPostAPI userpostsApi;
 
+    @Inject
+    public Retrofit retrofitInstance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DaggerApiComponent.create().injetc(this);
+
         mytextview = findViewById(R.id.mytextview);
         btnGET = findViewById(R.id.buttonGET);
         btnGETById = findViewById(R.id.buttonGETById);
 
-        // Retrofit instance
-        userpostsApi = RetrofitInstance.getService().create(UserPostAPI.class);
+        // Retrofit instance injected from Dagger
+        userpostsApi = retrofitInstance.create(UserPostAPI.class);
 
         btnGET.setOnClickListener(new View.OnClickListener() {
             @Override
