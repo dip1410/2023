@@ -1,5 +1,4 @@
 package com.example.mylearningcodes;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -22,7 +21,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity {
 
     private TextView mytextview;
     private Button btnGET, btnGETById;
@@ -34,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         // this tells this activity will use dagger for di
-        DaggerApiComponent.create().inject(this);
+        DaggerApiComponent.create().inject2(this);
 
         mytextview = findViewById(R.id.mytextview);
         btnGET = findViewById(R.id.buttonGET);
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-}//post
+    }//post
 
     private void getPostMethodCall() {
 
