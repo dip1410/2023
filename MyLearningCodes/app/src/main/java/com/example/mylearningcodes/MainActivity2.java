@@ -1,11 +1,13 @@
 package com.example.mylearningcodes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.mylearningcodes.databinding.ActivityMain2Binding;
 import com.example.mylearningcodes.di.DaggerApiComponent;
 import com.example.mylearningcodes.network.model.Request;
 import com.example.mylearningcodes.network.model.ResponseUser;
@@ -23,40 +25,48 @@ import retrofit2.Retrofit;
 
 public class MainActivity2 extends AppCompatActivity {
 
-    private TextView mytextview;
-    private Button btnGET, btnGETById;
+//    private TextView mytextview;
+//    private Button btnGET, btnGETById;
     private UserPostAPI userpostsApi;
 
     @Inject
     public Retrofit retrofitInstance;
 
+    // Initialize variables
+    ActivityMain2Binding binding;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+    //    setContentView(R.layout.activity_main2);
+        // Assign variable
+        binding= DataBindingUtil.setContentView(this,R.layout.activity_main2);
+
+
 
         // this tells this activity will use dagger for di
         DaggerApiComponent.create().inject2(this);
 
-        mytextview = findViewById(R.id.mytextview);
-        btnGET = findViewById(R.id.buttonGET);
-        btnGETById = findViewById(R.id.buttonGETById);
+//        mytextview = findViewById(R.id.mytextview);
+//        btnGET = findViewById(R.id.buttonGET);
+//        btnGETById = findViewById(R.id.buttonGETById);
 
         // Retrofit instance injected from Dagger
         userpostsApi = retrofitInstance.create(UserPostAPI.class);
 
-        btnGET.setOnClickListener(new View.OnClickListener() {
+        binding.buttonGET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mytextview.setText("");
+                binding.mytextview.setText("");
                 getPosts();
             }
         });
 
-        btnGETById.setOnClickListener(new View.OnClickListener() {
+        binding.buttonGETById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mytextview.setText("");
+                binding.mytextview.setText("");
                 getPostMethodCall();
             }
         });
@@ -69,7 +79,7 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<UserPost>> call, Response<List<UserPost>> response) {
                 if (!response.isSuccessful()) {
-                    mytextview.setText("Code: " + response.code());
+                    binding.mytextview.setText("Code: " + response.code());
                     return;
                 }
                 List<UserPost> posts = response.body();
@@ -81,7 +91,7 @@ public class MainActivity2 extends AppCompatActivity {
                     content += "Title: " + post.getTitle() + "\n";
                     content += "Text: " + post.getText() + "\n\n";
 
-                    mytextview.append(content);
+                    binding.mytextview.append(content);
                 }
             }
 
@@ -110,7 +120,7 @@ public class MainActivity2 extends AppCompatActivity {
                 content += "Title: " + response.body().getJob() + "\n";
                 content += "ID FROM SERVER ( Changes On Every Call ): " + response.body().getId() + "\n";
 
-                mytextview.append(content);
+                binding.mytextview.append(content);
 
             }
 
